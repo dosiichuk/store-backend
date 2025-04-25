@@ -92,3 +92,89 @@ The server will launch on `http://localhost:3000`.
 - The server uses `body-parser` to parse incoming JSON requests.
 
 ---
+
+
+## API Endpoints
+
+### **Users**
+| HTTP Verb | Endpoint         | Description                              | Parameters                                                                 |
+|-----------|------------------|------------------------------------------|----------------------------------------------------------------------------|
+| `GET`     | `/api/users`     | Get all users (requires token)           | Headers: `Authorization: Bearer <token>`                                  |
+| `GET`     | `/api/users/:id` | Get a specific user by ID (requires token) | Headers: `Authorization: Bearer <token>`                                  |
+| `POST`    | `/api/users`     | Create a new user (requires token)       | Body: `{ "firstName": "string", "lastName": "string", "password": "string" }` |
+
+---
+
+### **Products**
+| HTTP Verb | Endpoint                     | Description                              | Parameters                                                                 |
+|-----------|------------------------------|------------------------------------------|----------------------------------------------------------------------------|
+| `GET`     | `/api/products`              | Get all products                         | None                                                                      |
+| `GET`     | `/api/products/:id`          | Get a specific product by ID             | None                                                                      |
+| `GET`     | `/api/products/category/:category` | Get products by category                 | URL Parameter: `category`                                                 |
+| `GET`     | `/api/products/top-five`     | Get the top five most popular products   | None                                                                      |
+| `POST`    | `/api/products`              | Create a new product (requires token)    | Headers: `Authorization: Bearer <token>`<br>Body: `{ "name": "string", "price": "number", "category": "string" }` |
+
+---
+
+### **Orders**
+| HTTP Verb | Endpoint              | Description                              | Parameters                                                                 |
+|-----------|-----------------------|------------------------------------------|----------------------------------------------------------------------------|
+| `GET`     | `/api/orders`         | Get all orders (requires token)          | Headers: `Authorization: Bearer <token>`                                  |
+| `GET`     | `/api/orders/:id`     | Get orders by user ID (requires token)   | Headers: `Authorization: Bearer <token>`<br>URL Parameter: `id`           |
+
+---
+
+### **Authentication**
+| HTTP Verb | Endpoint         | Description                              | Parameters                                                                 |
+|-----------|------------------|------------------------------------------|----------------------------------------------------------------------------|
+| `POST`    | `/api/auth`      | Authenticate a user and return a token   | Body: `{ "email": "string", "password": "string" }`                       |
+
+---
+
+## Database Schema
+
+### **Users Table**
+| Column Name   | Data Type        | Constraints                     |
+|---------------|------------------|----------------------------------|
+| `id`          | `SERIAL`         | Primary Key                     |
+| `first_name`  | `VARCHAR(100)`   | NOT NULL                        |
+| `last_name`   | `VARCHAR(100)`   | NOT NULL                        |
+| `password`    | `VARCHAR(255)`   | NOT NULL (hashed password)      |
+
+---
+
+### **Products Table**
+| Column Name   | Data Type        | Constraints                     |
+|---------------|------------------|----------------------------------|
+| `id`          | `SERIAL`         | Primary Key                     |
+| `name`        | `VARCHAR(255)`   | NOT NULL                        |
+| `price`       | `DECIMAL(10, 2)` | NOT NULL                        |
+| `category`    | `VARCHAR(100)`   | NULLABLE                        |
+
+---
+
+### **Orders Table**
+| Column Name   | Data Type        | Constraints                     |
+|---------------|------------------|----------------------------------|
+| `id`          | `SERIAL`         | Primary Key                     |
+| `user_id`     | `INTEGER`        | Foreign Key -> `users(id)`      |
+| `status`      | `order_status`   | NOT NULL, ENUM ('active', 'complete') |
+
+---
+
+### **Order Items Table**
+| Column Name   | Data Type        | Constraints                     |
+|---------------|------------------|----------------------------------|
+| `id`          | `SERIAL`         | Primary Key                     |
+| `order_id`    | `INTEGER`        | Foreign Key -> `orders(id)`     |
+| `product_id`  | `INTEGER`        | Foreign Key -> `products(id)`   |
+| `quantity`    | `INTEGER`        | NOT NULL, CHECK (quantity > 0)  |
+
+---
+
+### **Enum Types**
+| Enum Name      | Values                     |
+|----------------|----------------------------|
+| `order_status` | `'active', 'complete'`     |
+
+---
