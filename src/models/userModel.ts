@@ -6,7 +6,6 @@ import { User } from '../types';
 import { signToken } from '../utils/utils';
 
 dotenv.config();
-const { BCRYPT_SALT_ROUNDS } = process.env;
 
 export class UserModel {
   async index(): Promise<User[]> {
@@ -63,12 +62,22 @@ export class UserModel {
     try {
       const passwordHash = await bcrypt.hash(
         password,
-        BCRYPT_SALT_ROUNDS as string
+        parseInt(process.env.BCRYPT_SALT_ROUNDS || '10')
       );
       const conn = await pool.connect();
       const sql =
-        'SELECT * FROM users WHERE first_name = $1 AND last_name = $2 AND password_hash = $3';
-      const result = await conn.query(sql, [firstName, lastName, passwordHash]);
+        'SELECT * FROM users WHERE first_name = $1 AND last_name = $2';
+      const result = await conn.query(sql, [firstName, lastName]);
+      if (result.rows.length) {
+        const user = result.rows[0];
+        const isValidPassword = await bcrypt.compare(
+          password,
+          user.password_hash
+        );
+        if (isValidPassword) {
+          return user;
+        }
+      }
       conn.release();
       if (result.rows.length) {
         const user = result.rows[0];

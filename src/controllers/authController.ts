@@ -18,6 +18,7 @@ export const authenticateUser = async (req: Request, res: Response) => {
     const token = signToken(user);
     res.status(200).json({ token });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to authenticate user' });
   }
 };

@@ -6,12 +6,13 @@
   "scripts": {
     "build": "tsc",
     "test": "npm run build && jasmine",
-    "start": "npm run setup-db && node dist/server.js",
+    "start": "npm run setup-db && npm run build && node dist/server.js",
     "watch": "tsc-watch --esModuleInterop src/server.ts --outDir ./dist --onSuccess \"node ./dist/server.js\"",
     "migrate-dev": "db-migrate up --env development --config ./src/config/database.js",
     "migrate-test": "db-migrate up --env test --config ./src/config/database.js",
-    "seed-dev": "ts-node src/seeds/seed.ts",
-    "setup-db": "npm run migrate-dev && npm run seed-dev",
+    "seed": "ts-node src/seeds/seed.ts",
+    "setup-db-dev": "ENV=development && npm run migrate-dev && npm run seed",
+    "setup-db-test": "ENV=test && npm run migrate-test && npm run seed",
     "tsc": "tsc",
     "prettier": "prettier --write \"src/**/*.{ts,js,json,md}\""
   },

@@ -5,14 +5,14 @@ import pool from '../database/db';
 
 dotenv.config();
 
-const SALT_ROUNDS = parseInt(process.env.SALT_ROUNDS || '10', 10);
+const BCRYPT_SALT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || '10');
 
 async function seed() {
   try {
     console.log('Seeding database...');
 
-    const password1 = await bcrypt.hash('password123', SALT_ROUNDS);
-    const password2 = await bcrypt.hash('securepass', SALT_ROUNDS);
+    const password1 = await bcrypt.hash('password123', BCRYPT_SALT_ROUNDS);
+    const password2 = await bcrypt.hash('securepass', BCRYPT_SALT_ROUNDS);
 
     const userRes = await pool.query(
       `
