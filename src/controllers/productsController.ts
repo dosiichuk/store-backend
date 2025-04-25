@@ -39,3 +39,30 @@ export const createProduct = async (
     res.status(500).json({ error: 'Failed to create product' });
   }
 };
+
+export const getProductsByCategory = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { category } = req.params;
+  try {
+    const products = await productModel.getProductsByCategory(category);
+    res.status(200).json(products);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ error: `Failed to fetch products in category ${category}` });
+  }
+};
+
+export const getTopFiveProducts = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const products = await productModel.topFiveProducts();
+    res.status(200).json(products);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch top five products' });
+  }
+};
