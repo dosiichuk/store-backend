@@ -5,14 +5,16 @@
   "main": "server.ts",
   "scripts": {
     "build": "tsc",
-    "test": "npm run build && jasmine",
+    "test": "cross-env NODE_ENV=test npm run build && cross-env NODE_ENV=test npm run setup-db-test && concurrently -k \"cross-env NODE_ENV=test ts-node src/server.ts\" \"wait-on http://localhost:3000 && cross-env NODE_ENV=test jasmine\"",
     "start": "npm run setup-db && npm run build && node dist/server.js",
     "watch": "tsc-watch --esModuleInterop src/server.ts --outDir ./dist --onSuccess \"node ./dist/server.js\"",
     "migrate-dev": "db-migrate up --env development --config ./src/config/database.js",
     "migrate-test": "db-migrate up --env test --config ./src/config/database.js",
     "seed": "ts-node src/seeds/seed.ts",
-    "setup-db-dev": "ENV=development && npm run migrate-dev && npm run seed",
-    "setup-db-test": "ENV=test && npm run migrate-test && npm run seed",
+    "setup-db-dev": "cross-env NODE_ENV=development && npm run migrate-dev && npm run seed",
+    "setup-db-test": "npm run migrate-test && npm run seed",
+    "clean-db-test": "db-migrate reset --env test --config ./src/config/database.js",
+    "clean-db-dev": "db-migrate reset --env development --config ./src/config/database.js",
     "tsc": "tsc",
     "prettier": "prettier --write \"src/**/*.{ts,js,json,md}\""
   },
@@ -32,6 +34,8 @@
     "@types/jasmine": "^5.1.7",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/pg": "^7.14.7",
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
     "db-migrate": "^0.11.14",
     "db-migrate-pg": "^1.5.2",
     "eslint-config-prettier": "^10.1.2",
@@ -42,7 +46,8 @@
     "supertest": "^7.1.0",
     "ts-node": "^10.9.2",
     "tsc-watch": "^4.2.9",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "wait-on": "^8.0.3"
   },
   "directories": {
     "test": "tests"

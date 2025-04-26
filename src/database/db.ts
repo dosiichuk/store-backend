@@ -9,15 +9,18 @@ const {
   POSTGRES_DB_TEST,
   POSTGRES_PORT,
   POSTGRES_HOST,
-  ENV,
+  NODE_ENV,
 } = process.env;
 
 const pool = new Pool({
   user: POSTGRES_USER,
   host: POSTGRES_HOST,
-  database: ENV === 'test' ? POSTGRES_DB_TEST : POSTGRES_DB_DEV,
+  database: NODE_ENV === 'test' ? POSTGRES_DB_TEST : POSTGRES_DB_DEV,
   password: POSTGRES_PASSWORD,
   port: Number(POSTGRES_PORT),
 });
+
+console.log(`NODE_ENV: ${NODE_ENV}`);
+console.log(`Connecting to database: ${NODE_ENV === 'test' ? POSTGRES_DB_TEST : POSTGRES_DB_DEV}`);
 
 export default pool;

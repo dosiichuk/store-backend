@@ -9,6 +9,9 @@ app.use(bodyParser.json());
 
 setupRoutes(app);
 
-app.listen(3000, function () {
+const server = app.listen(3000, function () {
   console.log(`starting app on: ${address}`);
-});
+}).on('error', (err) => {
+    console.error('Failed to start the server:', err);
+    process.exit(1);
+});;

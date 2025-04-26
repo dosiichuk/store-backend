@@ -9,6 +9,9 @@ const setupRoutes = (app: Application) => {
   app.use('/api/users', userRoutes);
   app.use('/api/orders', orderRoutes);
   app.use('/api/auth', authRoutes);
+  app.get('/', (req, res) => {
+    res.status(200).send('Welcome to the API');
+  });
 };
 
 export default setupRoutes;
