@@ -61,19 +61,13 @@ docker-compose up
 ---
 
 ## 4. Set Up the Database
-Run one of the following scripts to set up the database, create tables, and pre-populate them with seed data:
+Run the following scripts to set up the dev database, create tables, and pre-populate them with seed data:
 
 - For the development database:
   ```bash
   npm run setup-db-dev
   ```
-
-- For the test database:
-  ```bash
-  npm run setup-db-test
-  ```
-
----
+There is no need to manually setup the test database, it will be set up when you run the test script.
 
 ## 5. Launch the Server
 Start the server by running the following command:
@@ -85,12 +79,33 @@ npm run watch
 The server will launch on `http://localhost:3000`.
 
 ---
+The map of API endpoints is preseneted in a table below.
+
+## 6. Testing the source code
+The code contains tests for API endpoints and for models. In order to run tests, run the script:
+```bash
+npm run test
+```
+The script will pre-populate the test database with seed data, which you can find in the src/seeds/seed.ts script.
+The test data contains 2 users, 3 products and 3 orders.
+Once you have run the tests, make sure to clean the test database manually by running:
+```bash
+npm run clean-db-test
+```
+If you don't clean the test database, you risk data duplication upon the next test run.
+
+## 7. Getting jwt token to be able to access protected routes
+In order to get a token, you need to first visit the /api/auth route and provide valid credentials.
+You can use data of one of test users:
+{
+  "firstName": "Alice",
+  "lastName": "Anderson",
+  "password": "password123"
+}
+In response, you will get a token, which you should add to subsequent requests to protected routes in Authorization headers.
 
 ## Additional Notes
 - Ensure Docker is installed and running on your machine before starting the project.
-- The `setup-db-dev` and `setup-db-test` scripts in package.json handle database migrations and seed data population.
-- The server uses `body-parser` to parse incoming JSON requests.
-
 ---
 
 
@@ -127,7 +142,7 @@ The server will launch on `http://localhost:3000`.
 ### **Authentication**
 | HTTP Verb | Endpoint         | Description                              | Parameters                                                                 |
 |-----------|------------------|------------------------------------------|----------------------------------------------------------------------------|
-| `POST`    | `/api/auth`      | Authenticate a user and return a token   | Body: `{ "email": "string", "password": "string" }`                       |
+| `POST`    | `/api/auth`      | Authenticate a user and return a token   | Body: `{ "firstName": "string", "lastName": "string", "password": "string" }`                       |
 
 ---
 
@@ -139,7 +154,7 @@ The server will launch on `http://localhost:3000`.
 | `id`          | `SERIAL`         | Primary Key                     |
 | `first_name`  | `VARCHAR(100)`   | NOT NULL                        |
 | `last_name`   | `VARCHAR(100)`   | NOT NULL                        |
-| `password`    | `VARCHAR(255)`   | NOT NULL (hashed password)      |
+| `password_hash`    | `VARCHAR(255)`   | NOT NULL (hashed password)      |
 
 ---
 
