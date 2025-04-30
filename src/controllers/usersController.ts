@@ -31,11 +31,15 @@ export const createUser = async (req: Request, res: Response) => {
     }
     const passwordHash = await bcrypt.hash(password, 10);
 
-    const user = await userModel.create(firstName, lastName, passwordHash);
-    if (!user) {
+    const userTokenAndId = await userModel.create(
+      firstName,
+      lastName,
+      passwordHash
+    );
+    if (!userTokenAndId) {
       return res.status(400).json({ error: 'Failed to create user' });
     }
-    res.status(201).json(user);
+    res.status(201).json(userTokenAndId);
   } catch (err) {
     res.status(500).json({ error: 'Failed to create user' });
   }

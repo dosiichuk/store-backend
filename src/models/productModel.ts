@@ -47,6 +47,18 @@ export class ProductModel {
     }
   }
 
+  async deleteProduct(id: string): Promise<boolean> {
+    try {
+      const conn = await pool.connect();
+      const sql = 'DELETE FROM products WHERE id = $1';
+      await conn.query(sql, [id]);
+      conn.release();
+      return true;
+    } catch (err) {
+      throw new Error(`Could not delete product with id ${id}. Error: ${err}`);
+    }
+  }
+
   async getProductsByCategory(category: string): Promise<Product[]> {
     try {
       const conn = await pool.connect();

@@ -3,8 +3,5 @@
   "spec_files": ["**/*[sS]pec.js"],
   "random": false,
   "stopSpecOnExpectationFailure": false,
-  "helpers": [
-    "node_modules/ts-node/register",
-    "helpers/**/*.js"
-  ]
+  "helpers": ["node_modules/ts-node/register", "helpers/**/*.js"]
 }

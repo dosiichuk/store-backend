@@ -33,8 +33,10 @@ export const createProduct = async (
   res: Response
 ): Promise<void> => {
   try {
-    productModel.create(req.body);
-    res.status(201).json({ message: 'Product created successfully' });
+    const result = await productModel.create(req.body);
+    res
+      .status(201)
+      .json({ message: 'Product created successfully', product: result });
   } catch (err) {
     res.status(500).json({ error: 'Failed to create product' });
   }

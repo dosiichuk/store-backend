@@ -21,6 +21,8 @@ const pool = new Pool({
 });
 
 console.log(`NODE_ENV: ${NODE_ENV}`);
-console.log(`Connecting to database: ${NODE_ENV === 'test' ? POSTGRES_DB_TEST : POSTGRES_DB_DEV}`);
+console.log(
+  `Connecting to database: ${NODE_ENV === 'test' ? POSTGRES_DB_TEST : POSTGRES_DB_DEV}`
+);
 
 export default pool;

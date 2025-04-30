@@ -40,7 +40,7 @@ export class UserModel {
     firstName: string,
     lastName: string,
     passwordHash: string
-  ): Promise<{ token: string }> {
+  ): Promise<{ token: string; id: string }> {
     try {
       const conn = await pool.connect();
       const sql =
@@ -48,9 +48,22 @@ export class UserModel {
       const result = await conn.query(sql, [firstName, lastName, passwordHash]);
       conn.release();
       const token = signToken(result.rows[0]);
-      return { token };
+      const id = result.rows[0].id;
+      return { token, id };
     } catch (err) {
       throw new Error(`Could not create user. Error: ${err}`);
+    }
+  }
+
+  async deleteUser(id: string): Promise<boolean> {
+    try {
+      const conn = await pool.connect();
+      const sql = 'DELETE FROM users WHERE id = $1';
+      await conn.query(sql, [id]);
+      conn.release();
+      return true;
+    } catch (err) {
+      throw new Error(`Could not delete user with id ${id}. Error: ${err}`);
     }
   }
 

@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "test": "cross-env NODE_ENV=test npm run build && cross-env NODE_ENV=test npm run setup-db-test && concurrently -k \"cross-env NODE_ENV=test ts-node src/server.ts\" \"wait-on http://localhost:3000 && cross-env NODE_ENV=test jasmine\"",
-    "start": "npm run setup-db && npm run build && node dist/server.js",
+    "start": "npm run setup-db-dev && npm run build && node dist/server.js",
     "watch": "tsc-watch --esModuleInterop src/server.ts --outDir ./dist --onSuccess \"node ./dist/server.js\"",
     "migrate-dev": "db-migrate up --env development --config ./src/config/database.js",
     "migrate-test": "db-migrate up --env test --config ./src/config/database.js",
@@ -16,7 +16,8 @@
     "clean-db-test": "db-migrate reset --env test --config ./src/config/database.js",
     "clean-db-dev": "db-migrate reset --env development --config ./src/config/database.js",
     "tsc": "tsc",
-    "prettier": "prettier --write \"src/**/*.{ts,js,json,md}\""
+    "prettier": "prettier --write \"{src,spec}/**/*.{ts,js,json,md}\"",
+    "clean": "rm -rf dist"
   },
   "author": "Udacity",
   "license": "ISC",
